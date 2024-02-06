@@ -11,9 +11,22 @@ let i = 0;
 
 const record = (): string => {
   i++;
-  const fileName = `/tmp/filler-${i}.aiff`;
+  const fileName = `/tmp/filler-${i}.wav`;
   console.log(`Recording to ${fileName}`);
-  spawnSync("rec", [fileName, "silence", "1", "0.1", "1%", "2", "1.0", "1%"]);
+  spawnSync("rec", [
+    "-r",
+    "16000",
+    "-b",
+    "16",
+    fileName,
+    "silence",
+    "1",
+    "0.1",
+    "1%",
+    "2",
+    "1.0",
+    "1%",
+  ]);
 
   return fileName;
 };
@@ -24,15 +37,19 @@ const playAirhorn = () => {
   spawn("play", ["/Users/ship/Downloads/airhorn.wav"]);
 };
 
+const whisperPath = `/Users/ship/src/whisper.cpp`;
+const whisperCmd = `${whisperPath}/main`;
+
 const recognize = async (fileName: string): Promise<string> => {
-  const childProcess = spawn("whisper", [
+  const childProcess = spawn(whisperCmd, [
+    "-f",
     fileName,
-    "--fp16=False",
-    "--language=en",
-    "--model=tiny.en",
-    '--initial_prompt="Do not remove filler words like um and uh"',
-    "-f=txt",
-    "--output_dir=/tmp/",
+    "-m",
+    `${whisperPath}/models/ggml-tiny.en.bin`,
+    "--prompt",
+    "Do not remove filler words like um and uh",
+    "--language",
+    "en",
   ]);
 
   let buffer = "";
