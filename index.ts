@@ -33,6 +33,8 @@ const record = (): string => {
 
 const FILLER_REGEX = /\b(um|uh)\b/;
 
+const FALSE_POSITIVES = [/remove filler words like um and uh/];
+
 const playAirhorn = () => {
   spawn("play", ["/Users/ship/Downloads/airhorn.wav"]);
 };
@@ -70,7 +72,10 @@ while (true) {
 
   recognize(fileName).then((text) => {
     console.log(text);
-    if (text.match(FILLER_REGEX)) {
+    if (
+      text.match(FILLER_REGEX) &&
+      !FALSE_POSITIVES.some((fp) => fp.test(text))
+    ) {
       playAirhorn();
     }
   });
