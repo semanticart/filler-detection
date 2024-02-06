@@ -2,6 +2,16 @@
 
 Detect filler words (um, uh) as you speak.
 
+## Usage
+
+```
+bun index.ts [WHISPER_CPP_PATH] [AIRHORN_WAV_FILE_PATH]
+```
+
+Example: `bun index.ts /Users/ship/src/whisper.cpp /Users/ship/Downloads/airhorn.wav`
+
+You should be able to use non-bun TypeScript runners as well.
+
 ## Dependencies
 
 | name        | url                                      | install command                 |

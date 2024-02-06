@@ -7,6 +7,20 @@
 
 import { spawn, spawnSync } from "child_process";
 
+const args = process.argv.slice(2);
+
+// Destructure arguments to extract whisperPath and airHornPath
+const [whisperPath, airHornPath] = args;
+
+// Check if either whisperPath or airHornPath is not provided
+if (!whisperPath || !airHornPath) {
+  // Show error and exit the script if arguments are not provided
+  console.error(
+    "Error: Both 'whisperPath' and 'airHornPath' are required arguments.",
+  );
+  process.exit(1);
+}
+
 let i = 0;
 
 const record = (): string => {
@@ -35,11 +49,10 @@ const FILLER_REGEX = /\b(um|uh)\b/;
 
 const FALSE_POSITIVES = [/remove filler words like um and uh/];
 
-const playAirhorn = () => {
-  spawn("play", ["/Users/ship/Downloads/airhorn.wav"]);
+const playAirHorn = () => {
+  spawn("play", [airHornPath]);
 };
 
-const whisperPath = `/Users/ship/src/whisper.cpp`;
 const whisperCmd = `${whisperPath}/main`;
 
 const recognize = async (fileName: string): Promise<string> => {
@@ -76,7 +89,7 @@ while (true) {
       text.match(FILLER_REGEX) &&
       !FALSE_POSITIVES.some((fp) => fp.test(text))
     ) {
-      playAirhorn();
+      playAirHorn();
     }
   });
 }
